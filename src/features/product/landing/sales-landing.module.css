@@ -1,0 +1,619 @@
+.landing {
+  background: #fff;
+  color: #111;
+  font-family: "Pretendard Grok", sans-serif;
+  font-weight: 700;
+}
+.landing a {
+  color: inherit;
+  text-decoration: none;
+}
+.landing button,
+.landing input {
+  font-family: inherit;
+  font-weight: 700;
+}
+.landing button:focus-visible,
+.landing a:focus-visible,
+.landing summary:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 5px;
+}
+.landing h2 {
+  font-weight: 700;
+  font-size: clamp(48px, 5.8vw, 92px);
+  letter-spacing: -4px;
+  line-height: 1.15;
+  margin: 20px 0 27px;
+  word-break: keep-all;
+}
+.landing h2 em {
+  font-style: normal;
+  font-weight: 100;
+  color: #171717;
+}
+.landing p {
+  font-weight: 100;
+}
+.story {
+  position: relative;
+  background: #fff;
+}
+.flowVisual {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  z-index: 2;
+  pointer-events: none;
+  visibility: hidden;
+}
+.flowVisual[data-active="true"] {
+  visibility: visible;
+}
+.flowTools {
+  position: absolute;
+  z-index: 5;
+  right: max(24px, 4vw);
+  bottom: 108px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid #e7e7e7;
+  border-radius: 40px;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 5px 24px #00000008;
+  pointer-events: auto;
+}
+.flowTools span {
+  padding: 0 12px;
+  font-size: 11px;
+}
+.flowTools button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+.flowTools button:hover {
+  background: #f0f0f0;
+}
+.flowSection {
+  position: relative;
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 90px 7%;
+}
+.flowSection[data-side="right"] {
+  justify-content: flex-end;
+}
+.flowCopy {
+  position: relative;
+  z-index: 3;
+  width: 40%;
+  max-width: 580px;
+}
+.partName {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8c8c8c;
+  margin-bottom: 5px;
+}
+.flowCopy h2 {
+  font-size: clamp(41px, 4.7vw, 74px);
+  letter-spacing: -3px;
+}
+.flowCopy p {
+  color: #555;
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 350px;
+  word-break: keep-all;
+  margin-top: 30px;
+}
+.purchase {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  min-height: 800px;
+  background: #fff;
+  padding: 60px 4%;
+  border-top: 1px solid #eee;
+}
+.purchaseVisual {
+  position: relative;
+  min-height: 650px;
+  background: #fff;
+  pointer-events: auto;
+}
+.purchaseVisual > .eyebrow {
+  display: none;
+}
+.finishCaption {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.finishCaption span {
+  font-size: 13px;
+  color: #777;
+  font-weight: 100;
+}
+.purchaseCopy {
+  padding: 60px 8%;
+  align-self: center;
+}
+.status {
+  font-size: 12px;
+  color: #999;
+}
+.purchaseCopy h2 {
+  font-size: clamp(42px, 4.4vw, 69px);
+  line-height: 1.17;
+  letter-spacing: -2.8px;
+  margin-top: 20px;
+}
+.price {
+  font-size: 27px;
+  font-weight: 700 !important;
+  margin: 35px 0;
+  letter-spacing: -0.9px;
+}
+.finishPicker {
+  padding: 0;
+  border: 0;
+  margin: 0 0 38px;
+}
+.finishPicker legend {
+  width: 100%;
+  margin-bottom: 25px;
+  font-size: 11px;
+  color: #888;
+}
+.finishPicker legend span {
+  float: right;
+  font-size: 13px;
+  color: #111;
+}
+.finishPicker > div {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 21px);
+}
+.finishPicker button {
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ccc;
+  outline-offset: 5px;
+}
+.finishPicker button[aria-pressed="true"] {
+  outline: 1px solid #222;
+}
+.finishPicker .obsidian {
+  background: #23282d;
+  color: #fff;
+}
+.finishPicker .porcelain {
+  background: #f4f4f1;
+  color: #111;
+}
+.finishPicker .silver {
+  background: #bdc7d0;
+  color: #222;
+  box-shadow:
+    inset -5px -4px 6px #8794a1,
+    inset 5px 3px 7px #fff;
+}
+.finishPicker .studio {
+  background: #626e74;
+  color: #fff;
+}
+.finishPicker .daylight {
+  background: #eee3ce;
+  color: #111;
+}
+.finishPicker .afterhours {
+  background: #706280;
+  color: #fff;
+}
+.finishPicker p {
+  display: none;
+}
+.landing .primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%;
+  padding: 20px 25px;
+  border: 0;
+  border-radius: 40px;
+  background: #111;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.landing .primaryButton:hover {
+  background: #373737;
+  transform: translateY(-2px);
+}
+.purchaseCopy .primaryButton > svg:first-child {
+  display: none;
+}
+.faq {
+  position: relative;
+  z-index: 4;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 10%;
+  padding: 70px 8% 100px;
+}
+.faq h2 {
+  font-size: 37px;
+  letter-spacing: -1.8px;
+}
+.questions details {
+  border-bottom: 1px solid #ddd;
+}
+.questions summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  list-style: none;
+  padding: 25px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+.questions summary::-webkit-details-marker {
+  display: none;
+}
+.questions svg {
+  color: #999;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.questions details[open] svg {
+  transform: rotate(180deg);
+}
+.questions p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666;
+  padding: 0 20px 25px 0;
+  margin: 0;
+  word-break: keep-all;
+}
+.footer {
+  position: relative;
+  z-index: 4;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 35px 8% 105px;
+  border-top: 1px solid #eee;
+}
+.footer a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+.footer a span {
+  display: none;
+}
+.footer > span {
+  font-size: 9px;
+  color: #aaa;
+}
+.launchBar {
+  position: fixed;
+  z-index: 20;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 5%;
+  background: #fffffff0;
+  backdrop-filter: blur(15px);
+  border-top: 1px solid #ddd;
+}
+.launchBar[hidden] {
+  display: none;
+}
+.launchBar > div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.launchBar strong {
+  font-size: 11px;
+  font-weight: 700;
+}
+.launchBar span {
+  font-size: 12px;
+  color: #777;
+}
+.launchBar button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 12px 22px;
+  border-radius: 30px;
+  background: #111;
+  color: #fff;
+  font-size: 11px;
+}
+.launchDialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(470px, calc(100vw - 32px));
+  max-height: calc(100svh - 40px);
+  overflow: auto;
+  padding: 45px 34px 32px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  color: #111;
+  background: #fff;
+  font-family: "Pretendard Grok", sans-serif;
+}
+.launchDialog::backdrop {
+  background: #22222255;
+  backdrop-filter: blur(12px);
+}
+.launchDialog h2 {
+  font-size: 30px;
+  line-height: 1.2;
+  margin: 20px 0 32px;
+  letter-spacing: -1.5px;
+}
+.closeDialog {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  padding: 4px;
+  color: #111;
+}
+.emailLabel {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.emailField {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0 15px;
+  color: #888;
+}
+.emailField:focus-within {
+  border-color: #111;
+}
+.emailField input {
+  min-width: 0;
+  width: 100%;
+  padding: 15px 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #111;
+  font-size: 14px;
+}
+.chosenFinish {
+  display: flex;
+  justify-content: space-between;
+  color: #777;
+  font-size: 13px;
+  margin: 20px 0 25px;
+}
+.chosenFinish strong {
+  color: #111;
+  font-weight: 700;
+}
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #555;
+  font-size: 11px;
+  line-height: 1.7;
+  cursor: pointer;
+}
+.consent input {
+  margin-top: 3px;
+  accent-color: #111;
+  flex-shrink: 0;
+}
+.formNotice {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #666;
+  margin: 22px 0 13px;
+}
+.formError {
+  color: #b52b25;
+  font-size: 12px;
+  min-height: 16px;
+  margin: 10px 0 15px;
+  font-weight: 700 !important;
+}
+.savedState > svg {
+  margin-bottom: 15px;
+}
+.savedState > p:not(.formNotice) {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+.savedState > span {
+  font-size: 12px;
+  color: #777;
+}
+.deleteButton {
+  display: block;
+  margin: 22px auto 0;
+  font-size: 11px;
+  color: #777 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (min-width: 1600px) {
+  .flowSection {
+    padding-inline: 10%;
+  }
+  .flowCopy h2 {
+    font-size: 78px;
+  }
+  .flowCopy p {
+    font-size: 20px;
+    max-width: 400px;
+  }
+}
+@media (max-width: 1000px) {
+  .flowCopy h2 {
+    font-size: 43px;
+    letter-spacing: -2px;
+  }
+  .flowCopy p {
+    font-size: 16px;
+  }
+  .purchase {
+    padding-inline: 0;
+  }
+  .purchaseCopy {
+    padding-inline: 8%;
+  }
+  .purchaseCopy h2 {
+    font-size: 45px;
+  }
+}
+@media (max-width: 700px) {
+  .flowSection {
+    height: 100svh;
+    min-height: 650px;
+    padding: 75px 25px 0;
+    align-items: flex-start;
+    justify-content: flex-start !important;
+  }
+  .flowCopy {
+    width: 100%;
+    max-width: 340px;
+  }
+  .flowCopy h2 {
+    font-size: 43px;
+    letter-spacing: -2px;
+    margin: 17px 0;
+  }
+  .partName {
+    font-size: 11px;
+  }
+  .flowCopy p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 20px;
+    max-width: 280px;
+  }
+  .purchase {
+    grid-template-columns: 1fr;
+    padding: 20px 0;
+  }
+  .purchaseVisual {
+    height: 110vw;
+    min-height: 400px;
+    max-height: 480px;
+  }
+  .purchaseCopy {
+    padding: 45px 25px 60px;
+  }
+  .purchaseCopy h2 {
+    font-size: 52px;
+  }
+  .price {
+    font-size: 27px;
+  }
+  .finishCaption {
+    bottom: 0;
+    font-size: 13px;
+  }
+  .finishCaption span {
+    font-size: 11px;
+  }
+  .faq {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 30px 25px 65px;
+  }
+  .faq h2 {
+    font-size: 31px;
+  }
+  .questions summary {
+    font-size: 12px;
+  }
+  .questions p {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 25px 25px 95px;
+  }
+  .footer > span {
+    font-size: 8px;
+  }
+  .launchBar {
+    padding: 12px 20px;
+  }
+  .launchBar > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .launchBar strong {
+    font-size: 9px;
+  }
+  .launchBar span {
+    font-size: 10px;
+  }
+  .launchBar button {
+    padding: 12px 16px;
+    gap: 15px;
+    font-size: 10px;
+  }
+  .launchDialog {
+    padding: 40px 25px 28px;
+  }
+  .launchDialog h2 {
+    font-size: 27px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

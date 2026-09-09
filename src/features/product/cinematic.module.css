@@ -1,0 +1,479 @@
+@font-face {
+  font-family: "Pretendard Grok";
+  src: url("/fonts/pretendard/Pretendard-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Grok";
+  src: url("/fonts/pretendard/Pretendard-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+:global(html):has(.site) {
+  scrollbar-width: none;
+  background: #fff;
+}
+:global(html):has(.site)::-webkit-scrollbar {
+  display: none;
+}
+.site {
+  --text: #111;
+  --muted: #777;
+  --line: #e8e8e8;
+  --mint: #111;
+  font-family: "Pretendard Grok", sans-serif;
+  font-weight: 700;
+  font-synthesis: none;
+  background: #fff;
+  color: #111;
+  min-height: 100svh;
+  overflow: clip;
+  color-scheme: light;
+}
+.site button,
+.site input,
+.site a {
+  font-family: inherit;
+  font-weight: 700;
+}
+.site button {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.site button:focus-visible,
+.site input:focus-visible,
+.site a:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 5px;
+}
+.header {
+  height: 76px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  position: relative;
+  z-index: 4;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brandLogo {
+  display: block;
+  width: clamp(145px, 18vw, 210px);
+  height: auto;
+  object-fit: contain;
+}
+.brand strong {
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.8px;
+}
+.brand > span,
+.headerNote {
+  display: none;
+}
+.header nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font-size: 12px;
+}
+.header nav a {
+  color: #111;
+  text-decoration: none;
+}
+.header nav .navActive {
+  color: #111;
+}
+.stage {
+  height: calc(100svh - 76px);
+  min-height: 660px;
+  position: relative;
+  isolation: isolate;
+  background: #fff;
+}
+.heroVisual {
+  position: absolute;
+  inset: 0 280px 0 0;
+}
+.intro {
+  position: absolute;
+  z-index: 2;
+  left: 7%;
+  top: 36px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.7s,
+    transform 0.7s;
+}
+.site[data-chapter="intro"] .intro {
+  opacity: 1;
+  transform: none;
+}
+.intro h1 {
+  font-weight: 700;
+  font-size: clamp(55px, 6.5vw, 105px);
+  line-height: 1.1;
+  letter-spacing: -5px;
+  margin: 0;
+}
+.intro h1 span {
+  display: inline-block;
+  font-weight: 100;
+  font-size: 0.57em;
+  color: #181818;
+  letter-spacing: -2.2px;
+  margin-top: 16px;
+}
+.rightPanel {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  right: 5%;
+}
+.ready,
+.rightPanel > p,
+.lightPicker > span {
+  display: none;
+}
+.lightPicker {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #e4e4e4;
+  border-radius: 25px;
+  background: #ffffffde;
+}
+.lightPicker button {
+  font-size: 10px;
+  padding: 8px 13px;
+  border-radius: 20px;
+  color: #777;
+}
+.lightPicker button[aria-pressed="true"] {
+  color: #fff;
+  background: #151515;
+}
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 3;
+  left: 2.5%;
+  bottom: 70px;
+  padding: 7px;
+  border: 1px solid #e8e8e8;
+  border-radius: 26px;
+  background: #ffffffed;
+}
+.toolbar button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 34px;
+  color: #777;
+  border-radius: 50%;
+}
+.toolbar button:hover,
+.toolbar button[aria-pressed="true"] {
+  color: #111;
+  background: #eee;
+}
+.toolDivider {
+  width: 14px;
+  height: 1px;
+  background: #ddd;
+  margin: 7px auto;
+}
+.gestureHint {
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #888;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.controlDeck {
+  position: absolute;
+  z-index: 3;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: stretch;
+  padding: 24px 0;
+  background: #ffffffed;
+}
+.controlDeck > div {
+  flex: 1;
+  min-width: 0;
+}
+.controlDeck label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  margin-bottom: 15px;
+  color: #777;
+}
+.controlDeck output {
+  color: #111;
+  font-size: 10px;
+}
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  height: auto;
+}
+.swatches button {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  outline-offset: 4px;
+}
+.swatches button[aria-pressed="true"] {
+  outline: 1px solid #111;
+}
+.swatches .obsidian {
+  background: #232629;
+}
+.swatches .porcelain {
+  background: #f7f7f7;
+}
+.swatches .silver {
+  background: #bec7d0;
+  box-shadow:
+    inset -4px -3px 3px #87919b,
+    inset 4px 3px 3px #fff;
+}
+.swatches span {
+  flex-basis: 100%;
+  margin-top: 3px;
+  font-size: 10px;
+}
+.swatches .studio {
+  background: #626e74;
+}
+.swatches .daylight {
+  background: #eee3ce;
+}
+.swatches .afterhours {
+  background: #706280;
+}
+.atmosphere > div,
+.explodeGroup > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 18px;
+  color: #777;
+}
+.controlDeck input {
+  width: 100%;
+  min-width: 0;
+  accent-color: #111;
+  height: 2px;
+  cursor: pointer;
+}
+.feelGroup button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 9px;
+  height: 16px;
+}
+.feelGroup input {
+  display: block;
+  margin-top: 9px;
+}
+.toggle {
+  width: 20px;
+  height: 10px;
+  border-radius: 10px;
+  background: #ddd;
+  position: relative;
+}
+.toggle:after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #777;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+.feelGroup button[aria-pressed="true"] .toggle:after {
+  transform: translateX(10px);
+  background: #111;
+}
+.controlDeck .meetButton {
+  background: #111;
+  color: #fff;
+  border-radius: 30px;
+  padding: 15px 22px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 11px;
+  white-space: nowrap;
+  justify-content: space-between;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #888;
+}
+@media (min-width: 1600px) {
+  .header {
+    height: 84px;
+  }
+  .stage {
+    height: calc(100svh - 84px);
+  }
+}
+@media (max-width: 1000px) {
+  .heroVisual {
+    right: 225px;
+  }
+  .controlDeck {
+    width: 170px;
+    gap: 25px;
+  }
+  .controlDeck .meetButton {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .header {
+    height: 64px;
+    padding: 0 22px;
+  }
+  .brand strong {
+    font-size: 17px;
+  }
+  .header nav {
+    gap: 19px;
+    font-size: 10px;
+  }
+  .header nav button {
+    display: none;
+  }
+  .stage {
+    height: calc(100svh - 64px);
+    min-height: 680px;
+  }
+  .heroVisual {
+    inset: 0 0 190px;
+  }
+  .intro {
+    left: 24px;
+    top: 75px;
+  }
+  .intro h1 {
+    font-size: 48px;
+    letter-spacing: -2.5px;
+  }
+  .intro h1 span {
+    font-size: 27px;
+    letter-spacing: -1px;
+    margin-top: 10px;
+  }
+  .rightPanel {
+    top: 7px;
+    right: 20px;
+  }
+  .lightPicker button {
+    font-size: 8px;
+    padding: 7px 9px;
+  }
+  .toolbar {
+    bottom: 225px;
+    left: 12px;
+    padding: 4px;
+  }
+  .toolbar button {
+    width: 27px;
+    height: 28px;
+  }
+  .toolbar button svg {
+    width: 13px;
+  }
+  .gestureHint {
+    font-size: 7px;
+    gap: 10px;
+    bottom: 202px;
+  }
+  .gestureHint svg {
+    width: 10px;
+  }
+  .controlDeck {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: auto;
+    transform: none;
+    border-top: 1px solid #eee;
+    min-height: 190px;
+    padding: 19px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 28px;
+  }
+  .controlDeck label {
+    font-size: 9px;
+    margin-bottom: 12px;
+  }
+  .controlDeck output {
+    font-size: 9px;
+  }
+  .swatches button {
+    width: 16px;
+    height: 16px;
+  }
+  .swatches {
+    gap: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

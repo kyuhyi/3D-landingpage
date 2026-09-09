@@ -1,0 +1,15 @@
+{
+  "name": "grok-product-experience",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test model-state.test.mjs cinematic-motion.test.mjs product-input.test.mjs landing/scroll-story.test.mjs landing/flow-motion.test.mjs"
+  },
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@types/three": "0.185.4"
+  }
+}
