@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>3D 랜딩페이지 앱 만들기 실습</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -53,7 +58,7 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+  .page { max-width: 760px; min-width: 320px; margin: 0 auto; padding: 56px 24px 96px; word-break: keep-all; overflow-wrap: anywhere; }
   header { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 40px; }
   .eyebrow {
     display: inline-block;
@@ -67,11 +72,11 @@
     margin: 24px 0 0; padding: 0; list-style: none;
     font-size: 13px;
   }
-  .flow li { background: var(--bg-soft); border-radius: 6px; padding: 10px 12px; }
+  .flow li { background: var(--bg-soft); border-radius: 6px; padding: 10px 12px; min-width: 0; }
   .flow b { display: block; font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .06em; }
   @media (max-width: 560px) { .flow { grid-template-columns: 1fr 1fr; } }
 
-  section.step { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; margin-bottom: 44px; }
+  section.step { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 20px; margin-bottom: 44px; }
   .num {
     font-family: "IBM Plex Mono", monospace; font-size: 14px; color: var(--muted);
     padding-top: 6px; font-variant-numeric: tabular-nums;
@@ -129,6 +134,8 @@
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+</head>
+<body>
 
 <div class="page">
   <header>
@@ -284,3 +291,6 @@ cd android &amp;&amp; ./gradlew assembleRelease</pre>
     });
   });
 </script>
+
+</body>
+</html>
