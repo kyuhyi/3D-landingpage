@@ -610,6 +610,13 @@
     font-size: 27px;
   }
 }
+/* 모바일 앱 세이프에어리어: 고정 바와 도구를 하단 제스처 영역 위로 올린다. */
+.launchBar {
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.flowTools {
+  bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+}
 @media (prefers-reduced-motion: reduce) {
   .landing * {
     animation: none !important;

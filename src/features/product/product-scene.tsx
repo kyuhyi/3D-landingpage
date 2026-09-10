@@ -78,7 +78,10 @@ export function ProductScene(props: SceneProps) {
       queueMicrotask(() => setStatus("error"));
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // 모바일(좁은 화면)은 1.5로 제한해 3개 WebGL 캔버스의 GPU 부하를 줄인다.
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, host.clientWidth < 600 ? 1.5 : 2),
+    );
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;

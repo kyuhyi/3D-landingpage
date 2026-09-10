@@ -5,3 +5,19 @@ html { scroll-behavior: smooth; background: #fff; }
 body { margin: 0; background: #fff; color: #111; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+
+/* 모바일·PWA: 당겨서 새로고침과 가로 튕김을 막고, 탭 하이라이트·더블탭 지연을 없앤다. */
+html {
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+button, a, input[type="range"], label {
+  touch-action: manipulation;
+}
+/* 노치·상태바 아래로 콘텐츠가 들어가지 않게 세이프에어리어를 확보한다 (viewport-fit=cover). */
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+}

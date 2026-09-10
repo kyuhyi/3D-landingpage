@@ -470,6 +470,22 @@
     gap: 11px;
   }
 }
+/* 모바일 앱(PWA·Capacitor) 세이프에어리어: 하단 제스처 바 위로 컨트롤을 올린다. */
+@media (max-width: 700px) {
+  .controlDeck {
+    padding-bottom: calc(19px + env(safe-area-inset-bottom, 0px));
+    min-height: calc(190px + env(safe-area-inset-bottom, 0px));
+  }
+  .heroVisual {
+    inset: 0 0 calc(190px + env(safe-area-inset-bottom, 0px));
+  }
+  .toolbar {
+    bottom: calc(225px + env(safe-area-inset-bottom, 0px));
+  }
+  .gestureHint {
+    bottom: calc(202px + env(safe-area-inset-bottom, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .site * {
     animation: none !important;
