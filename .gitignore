@@ -14,8 +14,5 @@ next-env.d.ts
 Thumbs.db
 
 # Android TWA 서명 키와 비밀번호는 커밋하지 않는다
-android-twa/*.keystore
-android-twa/keystore-credentials.txt
-android-twa/app/build/
-android-twa/build/
-android-twa/.gradle/
+android/keystore/
+release/
