@@ -16,3 +16,5 @@ Thumbs.db
 # Android TWA 서명 키와 비밀번호는 커밋하지 않는다
 android/keystore/
 release/
+.vercel
+.env*
