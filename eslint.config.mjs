@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Capacitor 안드로이드 프로젝트와 APK 산출물은 린트 대상이 아니다.
+    "android/**",
+    "release/**",
   ]),
 ]);
 
