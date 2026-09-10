@@ -112,9 +112,10 @@
   }
 
   .check { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; }
-  .check li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; }
+  /* li 안의 텍스트 조각과 code가 각각 그리드 셀로 쪼개지지 않도록 블록 + 절대 위치 체크박스로 그린다. */
+  .check li { position: relative; padding-left: 28px; }
   .check li::before {
-    content: ""; width: 14px; height: 14px; margin-top: 6px;
+    content: ""; position: absolute; left: 0; top: 6px; width: 14px; height: 14px;
     border: 1.5px solid var(--muted); border-radius: 3px;
   }
   .note { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
