@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D 제품 랜딩페이지 만들기 실습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #ffffff; --bg-soft: #f4f4f6; --ink: #121214; --muted: #6d6d74; --line: #e4e4e8;
+    --accent: #d9342b; --code-bg: #141416; --code-ink: #f1f1f3; --code-muted: #8b8b93; --ok: #2f8f5b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101012; --bg-soft: #18181b; --ink: #ededf0; --muted: #9a9aa2; --line: #2a2a2f;
+      --accent: #f0493f; --code-bg: #08080a; --code-ink: #ededf0; --code-muted: #7a7a83; --ok: #4fbf82;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101012; --bg-soft: #18181b; --ink: #ededf0; --muted: #9a9aa2; --line: #2a2a2f;
+    --accent: #f0493f; --code-bg: #08080a; --code-ink: #ededf0; --code-muted: #7a7a83; --ok: #4fbf82;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Sans KR", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 760px; min-width: 320px; margin: 0 auto; padding: 56px 24px 96px; word-break: keep-all; overflow-wrap: anywhere; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 40px; }
+  .eyebrow { display: inline-block; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  h1 { font-size: 34px; line-height: 1.2; letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance; }
+  header p { margin: 0; color: var(--muted); max-width: 60ch; }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; font-size: 13px; }
+  .flow li { background: var(--bg-soft); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+  .flow b { display: block; font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .06em; }
+  @media (max-width: 560px) { .flow { grid-template-columns: 1fr 1fr; } }
+
+  section.step { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 20px; margin-bottom: 44px; }
+  .num { font-family: "IBM Plex Mono", monospace; font-size: 14px; color: var(--muted); padding-top: 6px; font-variant-numeric: tabular-nums; }
+  .num::before { content: "STEP"; display: block; font-size: 10px; letter-spacing: .14em; }
+  .num span { font-size: 26px; color: var(--ink); font-weight: 500; line-height: 1; display: block; margin-top: 2px; }
+  h2 { font-size: 20px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .goal { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+  .attach { display: inline-block; font-size: 12px; font-weight: 500; color: var(--accent); background: var(--bg-soft); border-radius: 4px; padding: 2px 8px; margin: 0 0 10px; }
+
+  .prompt { position: relative; margin: 0 0 14px; }
+  .prompt-label { position: absolute; top: 10px; left: 16px; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; color: var(--code-muted); }
+  pre {
+    margin: 0; padding: 36px 18px 18px; background: var(--code-bg); color: var(--code-ink); border-radius: 8px; overflow-x: auto;
+    font-family: "IBM Plex Mono", monospace; font-size: 13.5px; line-height: 1.65; white-space: pre-wrap; word-break: keep-all;
+  }
+  pre.cmd { padding-top: 18px; white-space: pre; }
+  .copy {
+    position: absolute; top: 8px; right: 8px; background: transparent; color: var(--code-muted);
+    border: 1px solid var(--code-muted); border-radius: 5px; font: 500 12px/1 "IBM Plex Sans KR", sans-serif; padding: 6px 10px; cursor: pointer;
+  }
+  .copy:hover, .copy:focus-visible { color: var(--code-ink); border-color: var(--code-ink); outline: none; }
+  .copy[data-done="1"] { color: var(--ok); border-color: var(--ok); }
+  mark { background: transparent; color: var(--accent); font-weight: 500; }
+
+  .check { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; }
+  .check li { position: relative; padding-left: 28px; }
+  .check li::before { content: ""; position: absolute; left: 0; top: 6px; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px; }
+  .note { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
+  .note code, .goal code, .check code, td code { font-family: "IBM Plex Mono", monospace; font-size: 13px; background: var(--bg-soft); padding: 1px 5px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 0 0 14px; }
+  th, td { text-align: left; padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; color: var(--muted); font-size: 12px; letter-spacing: .06em; }
+  td:first-child { white-space: nowrap; padding-right: 18px; }
+  .wrap { overflow-x: auto; }
+  @media (max-width: 560px) {
+    section.step { grid-template-columns: 1fr; }
+    .num { display: flex; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+    .num span { margin: 0; font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <span class="eyebrow">Claude Code · Codex 실습</span>
+    <h1>3D 제품 랜딩페이지 만들기</h1>
+    <p>제품 사진 한 장과 로고로 드래그 회전·분해·스크롤 소개가 되는 랜딩페이지를 만듭니다. 빈 폴더에서 아래 프롬프트를 순서대로 붙여넣습니다.</p>
+    <ol class="flow">
+      <li><b>01–03</b>기획 · 프로젝트 · 기본 디자인</li>
+      <li><b>04–09</b>3D 모델 · 조작 · 키 · 노브</li>
+      <li><b>10–15</b>마감 · 분해 · 투어 · 스크롤 소개</li>
+      <li><b>16–17</b>최종 검사 · GitHub</li>
+    </ol>
+  </header>
+
+  <section class="step">
+    <div class="num"><span>0</span></div>
+    <div>
+      <h2>준비물</h2>
+      <div class="wrap">
+      <table>
+        <tr><th>항목</th><th>확인</th></tr>
+        <tr><td>Node.js 22+</td><td><code>node -v</code></td></tr>
+        <tr><td>Git, GitHub CLI</td><td><code>gh auth status</code> 로그인 상태</td></tr>
+        <tr><td>제품 사진</td><td><code>product-reference.jpg</code> (STEP 1, 4에서 첨부)</td></tr>
+        <tr><td>로고</td><td><code>bsd-logo.png</code> (STEP 1, 3에서 첨부)</td></tr>
+        <tr><td>빈 폴더</td><td>예: <code>3D-landing</code>. 이 폴더에서 Claude Code 또는 Codex 실행</td></tr>
+      </table>
+      </div>
+      <p class="note">STEP 1~16은 프롬프트 하나가 끝나면 다음을 붙여넣습니다. 화면을 확인하고 이상하면 "OO이 안 돼, 고쳐줘"라고 짧게 말한 뒤 진행합니다.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>1</span></div>
+    <div>
+      <h2>기획</h2>
+      <span class="attach">첨부: 제품 사진 + 로고</span>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 1</span>
+        <button class="copy" type="button">복사</button>
+<pre>나는 코딩을 처음 배우는 학생이야. 지금 연 빈 연습 폴더에서
+첨부한 제품 사진과 BSD 로고를 활용해 3D 제품 홈페이지를 만들고 싶어.
+완성된 저장소를 클론하거나 기존 프로젝트 소스를 가져오지 말아줘.
+필요한 일반 개발 라이브러리는 설치해도 돼.
+완성 목표는 다음과 같아.
+
+- 전체 흰 배경, 웹페이지 글꼴은 Pretendard Bold와 Thin.
+- 헤더에는 첨부한 BSD 로고, 첫 화면 제목은 BSD BOT.
+- 사진 속 제품을 실제 입체 모델로 만들고 드래그로 돌려보기.
+- 자동 회전, 확대·축소, 제품 분해·조립.
+- 아래로 내려가면 디스플레이 → 볼륨 노브 → 키캡 LED → 내부 구조 소개.
+- 소개 중에도 제품을 돌려볼 수 있고, 마지막 색상 선택 제품도 돌릴 수 있음.
+- 상품 색상은 Black, White, Silver, Studio, Daylight, After hours.
+- 색상을 바꾸면 모든 제품 화면에 같은 색상 적용.
+- 가격은 199,000원, 버튼은 '출시 알림 신청'.
+
+먼저 사진에서 보이는 부품을 정리하고, 만들 순서와 폴더 구성을 제안해줘.
+사진에서 알 수 없는 내부 구조는 추정한 콘셉트라고 구분해줘.
+꼭 필요한 질문이 있으면 먼저 물어봐. 아직 구현은 시작하지 마.
+설명은 초등학생도 이해할 수 있게 짧고 쉽게 해줘.</pre>
+      </div>
+      <ul class="check">
+        <li>부품 목록, 제작 순서, 폴더 구성 제안이 나옴</li>
+        <li>질문이 있으면 답하고 다음 단계로</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>2</span></div>
+    <div>
+      <h2>프로젝트 생성</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 2</span>
+        <button class="copy" type="button">복사</button>
+<pre>이제 방금 정한 계획대로 현재 빈 연습 폴더에 프로젝트를 만들어줘.
+다른 폴더의 작업은 수정하지 마.
+
+- Node.js 22 이상이 있는지 먼저 확인.
+- Next.js 16.2.1, React 19.2.4, TypeScript.
+- Three.js 0.185.1, @types/three 0.185.4.
+- Tailwind CSS 4와 lucide-react.
+- 아직 DB나 로그인, 결제 서버는 만들지 않기.
+
+폴더는 src/app, src/features/product, public/images, docs로 나눠줘.
+AGENTS.md와 CLAUDE.md에 작업 규칙을 기록해줘.
+.gitignore와 .claudeignore에서 node_modules, .next, out, .env를 제외해줘.
+테스트 → 구현 → 확인 순서로 작업할 수 있게 준비해줘.
+테스트가 아직 없으면 통과한 척하는 가짜 테스트를 만들지 말아줘.
+Next.js API는 설치된 문서를 먼저 확인하고 구현해줘.
+메인 주소 /에서 'BSD BOT' 글자가 보이는 페이지를 실행해줘.
+실행한 주소와 다음에도 다시 켜는 방법을 알려줘.</pre>
+      </div>
+      <ul class="check">
+        <li><code>http://localhost:3000</code>에서 BSD BOT 글자 표시</li>
+        <li><code>package.json</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code> 생성</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>3</span></div>
+    <div>
+      <h2>기본 디자인</h2>
+      <span class="attach">첨부: 로고</span>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 3</span>
+        <button class="copy" type="button">복사</button>
+<pre>홈페이지의 기본 디자인을 만들어줘.
+
+- 배경은 페이지 전체 흰색.
+- 첨부한 BSD 로고를 헤더 왼쪽에 원본 비율로 표시.
+- 헤더 오른쪽에는 제품, 디테일, 출시 알림 메뉴.
+- 첫 화면 메인 제목은 'BSD BOT.'
+- 보조 문구는 '생각을, 손끝으로.'
+- 웹페이지 글꼴은 Pretendard Bold 700과 Thin 100만 사용.
+- 폰트 파일은 프로젝트에 보관하고 라이선스 파일도 함께 보관.
+- 굵은 제목, 가는 설명, 넉넉한 여백. 불필요한 긴 문구는 넣지 않기.
+- PC 첫 화면 오른쪽에는 나중에 사용할 제품 설정 영역을 확보.
+- 휴대폰에서는 글자나 버튼이 잘리지 않게 배치.
+
+먼저 로고와 글자, 제품이 들어갈 공간까지 만들고 브라우저에서 확인해줘.
+아직 제품 대신 사진을 넣어 3D가 완성된 것처럼 표현하지는 마.</pre>
+      </div>
+      <ul class="check">
+        <li>흰 배경, 헤더 로고, BSD BOT 제목, Pretendard 글꼴</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>4</span></div>
+    <div>
+      <h2>3D 모델 큰 모양</h2>
+      <span class="attach">첨부: 제품 사진</span>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 4</span>
+        <button class="copy" type="button">복사</button>
+<pre>첨부한 제품 사진을 보면서 Three.js로 실제 3D 모델을 만들어줘.
+평면 사진을 회전시키는 방식은 사용하지 마.
+먼저 큰 모양부터 만들어줘.
+
+- 모서리가 둥근 직사각형 본체.
+- 상단 왼쪽의 가로로 긴 디스플레이.
+- 상단 오른쪽의 원형 볼륨 노브.
+- 키는 총 11개. 첫째 줄 4개, 둘째 줄 4개, 마지막 줄 3개.
+- 마지막 줄 가운데 키는 옆으로 긴 키.
+- 본체 위쪽으로 나오는 케이블과 모서리 나사.
+
+본체 하판, 회로기판, 상판, 스위치, 키캡을 별도 그룹으로 나눠줘.
+나중에 이 그룹들을 벌려서 내부를 보여줄 거야.
+3D 코드와 화면 UI 코드는 파일을 나눠줘.
+브라우저에서 실제 렌더링되는지 확인해줘.</pre>
+      </div>
+      <ul class="check">
+        <li>첫 화면에 3D 제품이 렌더링됨</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>5</span></div>
+    <div>
+      <h2>세부 모양</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 5</span>
+        <button class="copy" type="button">복사</button>
+<pre>방금 만든 모델에 사진의 세부 모양을 추가해줘.
+
+- 키캡 모서리는 둥글고 윗면은 부드러운 플라스틱처럼 표현.
+- 노브 옆면에는 촘촘한 세로 홈.
+- 디스플레이에는 작은 상태 글자와 움직임을 나타내는 그래픽.
+- 키 윗면에는 Chat, Research, Build, Create, Focus, Review,
+  Approve, Pause, Voice, Orchestrate, New task 이름과 간단한 아이콘.
+- 금속 본체에는 자연스러운 반사, 바닥에는 부드러운 그림자.
+- 노브와 첫 줄 키 사이에 눈으로 구분되는 여유 공간.
+
+모양을 확인할 수 있는 정면·위쪽·비스듬한 화면을 보여줘.
+내부 구조나 실제 제품 기능은 확인되지 않은 사양으로 단정하지 마.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>6</span></div>
+    <div>
+      <h2>마우스 조작</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 6</span>
+        <button class="copy" type="button">복사</button>
+<pre>제품에 마우스 조작을 연결해줘.
+
+- 드래그하면 좌우 360도 회전. 위아래 각도도 바꿀 수 있게.
+- 놓으면 부드럽게 멈추기.
+- 확대, 축소, 기본 시점, 위에서 보기, 정면에서 보기 버튼.
+- 키보드 방향키로도 회전 가능.
+- 일반 마우스 휠은 페이지 스크롤에 사용.
+- Ctrl+휠과 확대·축소 버튼으로 제품 크기 조절.
+- 너무 가까이 확대해서 모델 속으로 들어가지 않게 범위 제한.
+- 휴대폰에서 세로 스크롤이 막히지 않게.
+
+버튼을 누를 때 카메라 드래그까지 같이 발생하지 않도록 처리해줘.
+코드 확인뿐 아니라 실제 브라우저에서 드래그와 확대를 확인해줘.</pre>
+      </div>
+      <ul class="check">
+        <li>드래그 회전, Ctrl+휠 확대, 일반 휠은 페이지 스크롤</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>7</span></div>
+    <div>
+      <h2>키캡 눌림</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 7</span>
+        <button class="copy" type="button">복사</button>
+<pre>3D 키캡을 누르는 동작을 만들어줘.
+
+- 누르고 있는 동안만 해당 키캡이 아래로 내려가기.
+- 눌린 키 아래 LED 링과 빛 번짐은 함께 숨기기.
+- 손을 떼면 키캡이 빠르게 원래 높이로 돌아오고 LED가 다시 보이기.
+- 눌렀다 놓은 키가 계속 내려간 상태로 남지 않기.
+- 같은 키를 여러 번 눌러도 작동.
+- 키 밖에서 마우스를 놓거나 포커스가 바뀌어도 눌림 상태 해제.
+- 클릭과 제품 회전 드래그를 구분.
+
+선택한 키와 현재 눌린 키의 상태를 분리해줘.
+눌림·해제 규칙은 먼저 테스트하고 실제 화면도 확인해줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>8</span></div>
+    <div>
+      <h2>LED 파스텔 색상</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 8</span>
+        <button class="copy" type="button">복사</button>
+<pre>키 아래 LED를 은은한 파스텔 색상으로 다듬어줘.
+
+- 전체 11개 키에 민트, 연한 파랑, 크림, 라벤더, 연분홍 등을 배치.
+- 선명한 무지개 네온처럼 보이지 않도록 채도를 낮추기.
+- 얇은 LED 링과 아주 약한 주변 빛 번짐만 사용.
+- 흰 배경에서도 색이 조금은 구분되게.
+- 키를 누를 때 링과 번짐이 함께 숨는 동작 유지.
+
+색상 출발값은 다음을 사용해줘.
+#abd8cb, #b2bfdc, #dfd1a8, #ceb7dd, #aed1d9,
+#bdb7d8, #d9b6c1, #dcc5ab, #b9d5bf, #b3cfdc, #cbbadb.
+빛 번짐 불투명도는 0.25 정도에서 시작해서 실제 화면을 보고 조절해줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>9</span></div>
+    <div>
+      <h2>볼륨 노브</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 9</span>
+        <button class="copy" type="button">복사</button>
+<pre>볼륨 노브를 실제로 조작할 수 있게 해줘.
+
+- 노브를 위쪽이나 오른쪽으로 드래그하면 음량 증가, 반대면 감소.
+- 음량 범위는 0~100, 기본 음량은 65.
+- 노브를 조작하는 동안 제품 전체가 함께 돌아가지 않기.
+- 노브를 돌릴 때만 노브 테두리가 밝아지고 놓으면 은은하게 사라지기.
+- 노브 윗면 전체를 하얗게 밝히지 않기.
+- Sound on을 기본값으로 사용하고 끌 수 있는 버튼 제공.
+- 키를 직접 누르면 짧고 작은 효과음 재생.
+- 브라우저가 사용자 입력 전 소리를 막으면 첫 클릭 이후 재생.
+
+히어로 오른쪽 설정 영역에 마감, 조명 강도, 분해, 음량을 세로로 배치해줘.
+휴대폰에서는 조작 공간을 확보하도록 아래쪽 2열 배치로 바꿔줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>10</span></div>
+    <div>
+      <h2>6가지 마감 색상</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 10</span>
+        <button class="copy" type="button">복사</button>
+<pre>상품 마감을 총 6가지로 만들어줘.
+아래 숫자는 본체 / 키캡의 색상 출발값이야.
+
+- Black: #22282e / #20272c. 긴 가운데 키는 밝게 유지.
+- White: #e8eae6 / #e5e9e5.
+- Silver: #bec8d2 / #aebac5. 반짝이는 금속 재질.
+- Studio: #4e595e / #626e74. 차분한 그레이.
+- Daylight: #e9dfca / #f1e7d4. 따뜻한 아이보리.
+- After hours: #4d465f / #706280. 은은한 퍼플.
+
+Studio, Daylight, After hours는 상품 색상 이름으로 사용해줘.
+히어로 위에 별도의 조명 프리셋 탭은 만들지 마.
+우측 마감 선택 영역에 6개 색상 버튼과 선택한 색상 이름을 표시해줘.
+마감 정의는 finishes.ts 한 파일에 모아줘.
+선택한 색상 상태도 공통 부모 한 곳에서 관리해줘.
+앞으로 추가할 스크롤 모델과 마지막 모델에도 같은 값을 전달할 거야.
+색상 변경 시 본체, 키캡, 노브와 글자 대비를 함께 조절해줘.</pre>
+      </div>
+      <ul class="check">
+        <li>우측 패널에 색상 버튼 6개, 클릭 시 제품 색 변경</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>11</span></div>
+    <div>
+      <h2>분해·조립</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 11</span>
+        <button class="copy" type="button">복사</button>
+<pre>분해 슬라이더와 분해·조립 버튼을 연결해줘.
+
+- 0%는 조립된 상태, 100%는 층별로 벌어진 상태.
+- 위에서부터 키캡 → 스위치 → 상판 → 회로기판 → 하판 순서가 보이게.
+- 부품이 갑자기 튀지 않고 부드럽게 이동.
+- 0%로 돌아오면 처음 위치와 정확하게 맞아야 함.
+- 분해 상태에서도 드래그 회전과 확대 가능.
+- 키캡의 작은 눌림 동작과 전체 분해 이동이 충돌하지 않기.
+
+층의 위치 계산을 따로 분리해 테스트해줘.
+완전 분해, 중간 상태, 재조립을 실제 브라우저에서 확인해줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>12</span></div>
+    <div>
+      <h2>자동 투어</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 12</span>
+        <button class="copy" type="button">복사</button>
+<pre>히어로 제품에 약 36초의 자동 투어를 만들어줘.
+조립된 제품 소개 → 디스플레이와 노브 가까이 보기 → 다른 각도 보기
+→ 내부 분해 → 다시 조립된 첫 장면 순서로 부드럽게 반복해줘.
+
+- 처음 제목은 BSD BOT. / 생각을, 손끝으로.
+- 자동 투어의 첫 소개 장면에서 제목을 보여주고 디테일 장면에서는 정리.
+- 사용자가 제품을 드래그하면 자동 투어를 멈추기.
+- 일시정지와 다시 재생 버튼 제공.
+- 반복 끝과 시작에서 카메라가 갑자기 튀지 않기.
+- 움직임 줄이기를 설정한 사람에게는 자동 움직임을 줄이기.
+- 모델과 제목, 우측 설정 패널이 겹치지 않기.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>13</span></div>
+    <div>
+      <h2>스크롤 소개 4개 섹션</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 13</span>
+        <button class="copy" type="button">복사</button>
+<pre>히어로 아래에 실제로 세로로 이어지는 상품 소개 섹션 4개를 만들어줘.
+
+1. OLED 디스플레이: '지금의 흐름을, / 한눈에.'
+2. 볼륨 노브: '한 번의 회전. / 빛이 따라옵니다.'
+3. 키캡 LED: '손끝의 감각. / 빛으로 돌아오다.'
+4. 내부 구조: '안쪽까지, / 빈틈없이.'
+
+중요한 동작:
+- 각 섹션은 문서 아래에 실제로 존재하는 독립 영역이어야 해.
+- 화면 하나에 고정한 채 문구만 교체하는 구성은 하지 마.
+- 스크롤하면 이전 설명이 위로 올라가고 다음 설명이 아래에서 나타나게.
+- 제품도 그 흐름을 따라 좌우와 위아래 위치가 바뀌고 시점이 전환되게.
+- 마지막 내부 구조에서는 제품이 분해되게.
+- 위로 스크롤하면 자연스럽게 이전 상태로 돌아가게.
+- PC는 설명과 제품을 좌우로 번갈아 배치, 휴대폰은 설명 위·제품 아래.
+
+스크롤 진행률과 카메라·제품 위치 계산은 별도 파일로 분리해서 테스트해줘.
+렌더링 캔버스를 재사용해도 되지만 제품이 화면 가운데에 붙어 있는 느낌은 피해야 해.
+실제 스크롤로 네 섹션이 차례로 지나가는 화면을 확인해줘.</pre>
+      </div>
+      <ul class="check">
+        <li>스크롤하면 제품이 따라 움직이며 4개 섹션 통과, 마지막에 분해</li>
+      </ul>
+      <p class="note">제품이 한 화면에 고정된 채 문구만 바뀌면 아래 보정 프롬프트를 붙여넣습니다.</p>
+      <div class="prompt">
+        <span class="prompt-label">보정</span>
+        <button class="copy" type="button">복사</button>
+<pre>히어로 섹션을 보고 난 후 스크롤이 될 때마다 상품이 나와야 하는 부분, 그 상품이 계속 스크롤을 할 때 따라가며 변환되는 과정으로 만들어줘. 지금은 제자리 한 화면에서 상품이 변환되고 있어서 심심해.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>14</span></div>
+    <div>
+      <h2>소개 모델 조작과 부품 화살표</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 14</span>
+        <button class="copy" type="button">복사</button>
+<pre>아래 스크롤 소개 모델도 드래그 회전과 확대가 가능하게 해줘.
+
+- 사용자가 돌린 각도는 손을 뗀 뒤에도 유지.
+- 페이지 스크롤을 다시 시작하면 해당 섹션의 소개 시점으로 부드럽게 복귀.
+- 일반 휠은 페이지 이동, Ctrl+휠과 +/- 버튼은 제품 확대·축소.
+- '소개 시점으로' 버튼도 제공.
+- 제목이나 버튼이 투명한 3D 캔버스에 가려 클릭되지 않는 문제 방지.
+
+부품을 가리키는 설명 표시도 만들어줘.
+- 부품을 둘러싸는 사각 점선 박스는 사용하지 않기.
+- 바깥의 이름표에서 실제 부품을 향해 검정 점선 화살표 연결.
+- 부품을 가리키는 화살촉만 빨간색으로 은은하게 점멸.
+- 노브 이름표 테두리는 연한 회색.
+- 회전·확대·분해해도 화살촉이 해당 부품을 따라가기.
+- 움직임 줄이기 설정에서는 점멸을 멈추기.
+
+카메라의 자동 제어와 수동 제어가 동시에 적용되지 않도록 처리해줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>15</span></div>
+    <div>
+      <h2>마지막 제품 선택과 출시 알림</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 15</span>
+        <button class="copy" type="button">복사</button>
+<pre>상품 소개 아래에 마지막 제품 선택 영역을 만들어줘.
+
+- 제목은 '나의 데스크. / 나만의 색.'
+- 왼쪽에는 드래그로 회전할 수 있는 제품.
+- 오른쪽에는 199,000원, 6가지 마감 선택, '출시 알림 신청' 버튼.
+- 색상을 바꿔도 돌려놓은 각도 유지.
+- 히어로, 스크롤 소개, 마지막 제품이 항상 같은 색상을 사용.
+- 화면 밖 모델에도 색상을 바로 적용해 이전 색이 잠깐 보이지 않게.
+- 조명 강도도 공통 값을 사용해 같은 마감이 엉뚱하게 달라 보이지 않게.
+
+출시 알림 버튼을 누르면 이메일과 동의를 입력하는 창을 열어줘.
+지금은 실제 서버 연결 없이 이 브라우저에만 저장하는 연습용 UI로 만들어줘.
+실제로 접수되거나 이메일이 발송됐다고 표시하지 말고,
+'이 기기에만 저장되며 실제 접수·발송은 아직 연결되지 않았음'을 알려줘.
+저장된 정보를 삭제할 수 있게 하고 잘못된 이메일도 확인해줘.
+하단에 짧은 FAQ와 스크롤 중 보이는 출시 알림 버튼을 추가해줘.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>16</span></div>
+    <div>
+      <h2>최종 검사</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 16</span>
+        <button class="copy" type="button">복사</button>
+<pre>지금까지 만든 페이지를 최종 검사해줘.
+PC 1280×800과 휴대폰 크기 390×844에서 다음을 확인해줘.
+
+1. BSD 로고, BSD BOT 메인 제목, 전체 흰 배경, Bold/Thin 글꼴.
+2. PC 우측 설정 패널, 휴대폰에서 잘리지 않는 조작 영역.
+3. 제품 360도 회전, 확대·축소, 자동 투어, 분해·재조립.
+4. 키 눌림 중 LED 숨김, 손을 떼면 복귀.
+5. 노브 음량 조절과 테두리만 빛나는 동작, 기본 Sound on.
+6. 은은한 LED와 검정 점선·빨간 화살촉.
+7. 실제로 내려가는 네 소개 섹션과 수동 회전 후 스크롤 복귀.
+8. 여섯 마감이 모든 제품 화면에 함께 적용되는지.
+9. 마지막 제품의 회전과 출시 알림 입력·삭제.
+10. 가로 넘침, 버튼 겹침, 브라우저 오류가 없는지.
+
+오른쪽 스크롤바 모양은 숨겨도 페이지 스크롤 자체는 유지해줘.
+화면 밖 3D 렌더링을 줄이고 페이지를 닫으면 자원을 정리해줘.
+테스트, 린트, TypeScript 검사와 빌드가 실행되는 npm run check를 완성해줘.
+실패하면 원인을 고치고 다시 확인해줘.
+README에는 실행 방법과 아직 연결하지 않은 기능을 기록해줘.
+검증 결과와 대표 화면을 docs에 남겨줘.</pre>
+      </div>
+      <ul class="check">
+        <li><code>npm run check</code> 통과</li>
+        <li><code>README.md</code>, <code>docs/</code> 검증 기록 생성</li>
+      </ul>
+      <p class="note">제품이 화면에서 잘려 보이면: <mark>제품이 전체적으로 이미지가 잘려서 보이지 않도록 수정해줘</mark></p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="num"><span>17</span></div>
+    <div>
+      <h2>GitHub 저장</h2>
+      <div class="prompt">
+        <span class="prompt-label">PROMPT 17</span>
+        <button class="copy" type="button">복사</button>
+<pre>지금까지 만든 모든 내용을 내 깃허브에 새로운 레포 <mark>3D-landingpage</mark>로 생성해서 커밋 푸시해줘.</pre>
+      </div>
+      <ul class="check">
+        <li><code>https://github.com/아이디/3D-landingpage</code> 접속 시 코드 표시</li>
+      </ul>
+      <p class="note">다시 실행할 때는 프로젝트 폴더에서 아래 명령을 실행합니다.</p>
+      <div class="prompt">
+        <button class="copy" type="button">복사</button>
+<pre class="cmd">npm ci
+npm run dev</pre>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  document.querySelectorAll(".copy").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const pre = button.parentElement.querySelector("pre");
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        button.textContent = "복사됨";
+        button.dataset.done = "1";
+        setTimeout(() => { button.textContent = "복사"; delete button.dataset.done; }, 1600);
+      } catch {
+        button.textContent = "실패";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
